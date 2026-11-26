@@ -1,4 +1,4 @@
-"""Streamlit interactive dashboard for Regime-Aware Monsoon Rainfall Forecasting."""
+﻿"""Streamlit interactive dashboard for Regime-Aware Monsoon Rainfall Forecasting."""
 
 from __future__ import annotations
 
@@ -53,7 +53,7 @@ PRESET_SCENARIOS = {
 
 st.set_page_config(
     page_title="Regime-Aware Monsoon Rainfall Forecasting (SIH26080)",
-    page_icon="🌧️",
+    page_icon="ðŸŒ§ï¸",
     layout="wide",
 )
 
@@ -123,7 +123,7 @@ if is_synthetic:
     )
 else:
     st.info(
-        f"**Dataset Source:** `{dataset_info['source_path']}` — "
+        f"**Dataset Source:** `{dataset_info['source_path']}` â€” "
         f"{dataset_info.get('dataset_note', '')}"
     )
 
@@ -169,7 +169,7 @@ with tabs[0]:
     st.markdown(
         """
         <div class="banner-box">
-        <strong>Core Motivation (SIH26080 — MoES):</strong> Raw numerical weather prediction (NWP)
+        <strong>Core Motivation (SIH26080 â€” MoES):</strong> Raw numerical weather prediction (NWP)
         rainfall forecasts frequently exhibit systematic errors that reverse or shift in magnitude
         between <strong>Active</strong> (enhanced convection/trough) and <strong>Break</strong>
         (suppressed rainfall) monsoon phases. Applying a single uniform bias offset across all days
@@ -280,7 +280,7 @@ with tabs[1]:
                 for k, v in dataset_info.get("regime_distribution", {}).items()
             ]
         )
-        st.dataframe(dist_df, use_container_width=True, hide_index=True)
+        st.dataframe(dist_df, hide_index=True)
 
         cleaning = dataset_info.get("cleaning_report", {})
         if cleaning:
@@ -291,7 +291,7 @@ with tabs[1]:
         st.markdown("**Feature & Target Schema**")
         schema_rows = [
             ("rainfall_forecast", "Raw NWP rainfall forecast (mm/day)", "Predictor"),
-            ("temperature_anomaly", "Temperature anomaly (°C)", "Predictor"),
+            ("temperature_anomaly", "Temperature anomaly (Â°C)", "Predictor"),
             ("humidity", "Relative humidity (%)", "Predictor"),
             ("wind_speed", "Wind speed (m/s)", "Predictor"),
             ("pressure_anomaly", "Surface pressure anomaly (hPa)", "Predictor"),
@@ -302,7 +302,6 @@ with tabs[1]:
         ]
         st.dataframe(
             pd.DataFrame(schema_rows, columns=["Column", "Description", "Role"]),
-            use_container_width=True,
             hide_index=True,
         )
 
@@ -327,11 +326,11 @@ with tabs[1]:
             }
             for label, vals in cls_metrics["per_class"].items()
         ]
-        st.dataframe(pd.DataFrame(per_cls_rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(per_cls_rows), hide_index=True)
     with cm_col2:
         cm_img = REPORTS_DIR / "confusion_matrix.png"
         if cm_img.exists():
-            st.image(str(cm_img), caption="Confusion Matrix (Test Set)", use_container_width=True)
+            st.image(str(cm_img), caption="Confusion Matrix (Test Set)")
 
 # ---------------------------------------------------------------------------
 # Tab 3: Bias Correction Comparison & Regime-Specific Performance
@@ -367,7 +366,7 @@ with tabs[2]:
             "RMSE Skill Score": round(skills["regime_aware_correction"]["RMSE_skill_score"], 4),
         },
     ]
-    st.dataframe(pd.DataFrame(overall_rows), use_container_width=True, hide_index=True)
+    st.dataframe(pd.DataFrame(overall_rows), hide_index=True)
 
     st.caption(
         f"Uniform baseline additive offset learned on training set: "
@@ -396,7 +395,7 @@ with tabs[2]:
                 "Regime-Aware RMSE Skill": round(sk["regime_aware_correction"]["RMSE_skill_score"], 4),
             }
         )
-    st.dataframe(pd.DataFrame(regime_rows), use_container_width=True, hide_index=True)
+    st.dataframe(pd.DataFrame(regime_rows), hide_index=True)
 
     if PREDICTIONS_CSV_PATH.exists():
         st.subheader("Sample Test-Set Predictions")
@@ -407,7 +406,7 @@ with tabs[2]:
             default=sorted(preds_df["true_regime"].unique()),
         )
         filtered = preds_df[preds_df["true_regime"].isin(regime_filter)]
-        st.dataframe(filtered.head(30), use_container_width=True, hide_index=True)
+        st.dataframe(filtered.head(30), hide_index=True)
 
 # ---------------------------------------------------------------------------
 # Tab 4: Visualisations
@@ -418,19 +417,19 @@ with tabs[3]:
     with v1:
         mae_img = REPORTS_DIR / "mae_comparison.png"
         if mae_img.exists():
-            st.image(str(mae_img), caption="Overall MAE Comparison", use_container_width=True)
+            st.image(str(mae_img), caption="Overall MAE Comparison")
     with v2:
         rmse_img = REPORTS_DIR / "rmse_comparison.png"
         if rmse_img.exists():
-            st.image(str(rmse_img), caption="Overall RMSE Comparison", use_container_width=True)
+            st.image(str(rmse_img), caption="Overall RMSE Comparison")
 
     reg_img = REPORTS_DIR / "regime_performance.png"
     if reg_img.exists():
-        st.image(str(reg_img), caption="MAE and RMSE Across Monsoon Regimes", use_container_width=True)
+        st.image(str(reg_img), caption="MAE and RMSE Across Monsoon Regimes")
 
     avp_img = REPORTS_DIR / "actual_vs_predicted.png"
     if avp_img.exists():
-        st.image(str(avp_img), caption="Actual vs Predicted Rainfall (Test Set)", use_container_width=True)
+        st.image(str(avp_img), caption="Actual vs Predicted Rainfall (Test Set)")
 
 # ---------------------------------------------------------------------------
 # Tab 5: Interactive Sample Rainfall Prediction
@@ -465,7 +464,7 @@ with tabs[4]:
                 value=float(defaults["rainfall_forecast"]), step=0.5
             )
             temperature_anomaly = st.number_input(
-                "Temperature Anomaly (°C)", min_value=-10.0, max_value=10.0,
+                "Temperature Anomaly (Â°C)", min_value=-10.0, max_value=10.0,
                 value=float(defaults["temperature_anomaly"]), step=0.1
             )
             humidity = st.slider(
@@ -541,4 +540,5 @@ with tabs[4]:
             {"Regime": classes, "Predicted Probability": [round(float(p), 4) for p in proba]}
         ).sort_values("Predicted Probability", ascending=False)
         st.markdown("**Regime Classifier Confidence**")
-        st.dataframe(proba_df, use_container_width=True, hide_index=True)
+        st.dataframe(proba_df, hide_index=True)
+
